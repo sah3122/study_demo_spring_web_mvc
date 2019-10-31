@@ -2,10 +2,7 @@ package me.study.demospringwebmvc;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by dongchul on 2019-10-31.
@@ -46,6 +43,15 @@ public class SampleController {
     //@RequestMapping(value = "/hello", method = {RequestMethod.GET, RequestMethod.DELETE}) // http method 정의하지 않을시 모든 method허용
     @GetMapping("/hello") // 하나의 요청만 사용 할 경우우    @ResponseBody // 응답 본문으로 리턴, 작성하지 않을시 view를 찾아감
     public String hello() {
+        return "hello";
+    }
+
+    // ? 한글자 매핑
+    // * 여러글자
+    // ** 여러 패스스    @RequestMapping("/**")
+    // spring boot 는 확장자 매핑을 사용하지 못하도록 설정되어 있다.
+    @ResponseBody
+    public String helloDong() {
         return "hello";
     }
 }
