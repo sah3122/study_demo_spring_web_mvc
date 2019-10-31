@@ -1,6 +1,7 @@
 package me.study.demospringwebmvc;
 
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,7 +42,7 @@ public class SampleController {
      * idemponent
      */
     //@RequestMapping(value = "/hello", method = {RequestMethod.GET, RequestMethod.DELETE}) // http method 정의하지 않을시 모든 method허용
-    @GetMapping("/hello") // 하나의 요청만 사용 할 경우우    @ResponseBody // 응답 본문으로 리턴, 작성하지 않을시 view를 찾아감
+    @GetMapping("/hello2") // 하나의 요청만 사용 할 경우우    @ResponseBody // 응답 본문으로 리턴, 작성하지 않을시 view를 찾아감
     public String hello() {
         return "hello";
     }
@@ -50,6 +51,15 @@ public class SampleController {
     // * 여러글자
     // ** 여러 패스스    @RequestMapping("/**")
     // spring boot 는 확장자 매핑을 사용하지 못하도록 설정되어 있다.
+
+    // 특정한 타입의 데이터를 담고 있는 요청만 처리할 수 있게 정의한다.
+    // consumes -> content-type 헤더로 필터링
+    // produces -> accept header 필터링, accpet 타입이 없을시 매칭이 된다.
+   @GetMapping(
+           value = "/hello",
+           consumes = MediaType.APPLICATION_JSON_VALUE, //클래스에 선언한 RequestMapping 에 사용한것과 조합되지 않고 메소드에 사용한 설정이 사용된다.
+           produces = MediaType.TEXT_PLAIN_VALUE
+   )
     @ResponseBody
     public String helloDong() {
         return "hello";
