@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,7 +29,8 @@ public class SampleControllerTest {
         //given
         mockMvc.perform(get("/hello")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON)) // accept 가 없을시 아무 응답이나 받는다는 뜻으로 받아드린다.
+                .header(HttpHeaders.FROM, " localhost"))
+                //.accept(MediaType.APPLICATION_JSON)) // accept 가 없을시 아무 응답이나 받는다는 뜻으로 받아드린다.
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string("hello"))

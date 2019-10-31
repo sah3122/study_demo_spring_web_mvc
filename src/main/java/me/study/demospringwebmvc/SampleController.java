@@ -1,5 +1,6 @@
 package me.study.demospringwebmvc;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -56,12 +57,33 @@ public class SampleController {
     // consumes -> content-type 헤더로 필터링
     // produces -> accept header 필터링, accpet 타입이 없을시 매칭이 된다.
    @GetMapping(
-           value = "/hello",
+           value = "/hello3",
            consumes = MediaType.APPLICATION_JSON_VALUE, //클래스에 선언한 RequestMapping 에 사용한것과 조합되지 않고 메소드에 사용한 설정이 사용된다.
            produces = MediaType.TEXT_PLAIN_VALUE
    )
     @ResponseBody
-    public String helloDong() {
+    public String helloMediaType() {
+        return "hello";
+    }
+
+    /**
+     *  "!" + HttpHeaders.FROM 특정 헤더가 없는 요청을 처리하고 싶은 경우
+     *  특정한 헤더 키/값이 있는 요청을 처리 하고 싶은 경우
+     *  HttpHeaders.FROM + "=" + "value"
+     *  특정한 요청 매개변수 키를 가지고 있는 요청을 처리 하고 싶은 경우
+     *  params = "value"
+     *  특정한 요청 매개변수가 없는 요청을 처리하고 싶은 경우
+     *  params = "!value"
+     *  특정한 요청 매개변수 요청을 처리하고 싶은 경우
+     *  params = "key=value"
+     * @return
+     */
+    @GetMapping(
+            value = "/hello",
+            headers = HttpHeaders.FROM
+    )
+    @ResponseBody
+    public String helloHeader() {
         return "hello";
     }
 }
