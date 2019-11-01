@@ -3,6 +3,15 @@ package me.study.demospringwebmvc;
 public class Event {
     private Integer id;
     private String naem;
+    private Integer limit;
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
 
     public Integer getId() {
         return id;

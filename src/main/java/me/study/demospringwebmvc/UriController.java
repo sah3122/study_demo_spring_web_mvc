@@ -3,6 +3,7 @@ package me.study.demospringwebmvc;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -24,6 +25,22 @@ public class UriController {
     public Event getEvent(@PathVariable Integer id, @MatrixVariable String name) {
         Event event = new Event();
         event.setId(id);
+        event.setNaem(name);
+        return event;
+    }
+
+    /**
+     * RequestParam 의 기본값은 True 이다.
+     * @RequestParam Map<String, String> params // map으로 받을 수 있다.
+     */
+    @PostMapping("/events")
+    @ResponseBody
+    public Event getRequestParam(
+            @RequestParam(required = false, defaultValue = "dong") String name,
+            @RequestParam Integer limit
+
+    ) {
+        Event event = new Event();
         event.setNaem(name);
         return event;
     }
