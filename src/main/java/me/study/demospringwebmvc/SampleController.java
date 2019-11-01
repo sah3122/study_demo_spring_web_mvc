@@ -1,10 +1,10 @@
 package me.study.demospringwebmvc;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.PushBuilder;
 
 /**
  * Created by dongchul on 2019-10-31.
@@ -132,6 +132,38 @@ public class SampleController {
     public String updateEvent(@PathVariable int id) {
         return "events";
     }
+
+    /**
+     * 핸들러 메소드
+     * PushBuilder
+     *
+     * Spring 5에 포함
+     * 리소스 푸쉬에 사용된다.
+     * 클라이언트가 이벤트 요청시 서버가 응답을 하며 해당 뷰에서 사용하는 이미지를 다시 요청하는 과정
+     * 두번째 요청을 하는 과정을 포함 할 수 있다.
+     *
+     * HttpMethod
+     * 해당 요청이 어떤 http method인지 판별 할때 사용.
+     *
+     * LocaleResolver
+     * Locale, TimeZone 등의 정보를 가져 올 수 있다.
+     */
+    public String pushBuilder(PushBuilder pushBuilder) {
+        return "pushBuilder";
+    }
+
+    /**
+     * ResponseEntity
+     * Rest API 를 설계할때 여러가지 정보를 함꼐 담아 보낼수 있어 사용한다.
+     */
+    @GetMapping("/responseEntity")
+    @ResponseBody
+    public ResponseEntity<String> responseEntity() {
+        return new ResponseEntity<String>("test", HttpStatus.OK);
+    }
+
+
+
 
 
 }
