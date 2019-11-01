@@ -97,4 +97,41 @@ public class SampleController {
      * 서버 또는 특정 리소스가 제공하는 기능을 확인할 수 있다.
      * 서버는 Allow 응답 헤더에 사용할 수 있는 HTTP Method 목록을 제공해야 한다.
      */
+
+    @GetMapping("/events")
+    @ResponseBody
+    public String events() {
+        return "events";
+    }
+
+    @GetMapping("/events/{id}")
+    @ResponseBody
+    public String eventsWithId(@PathVariable int id) {
+        return "events";
+    }
+
+    @DeleteMapping("/events/{id}")
+    @ResponseBody
+    public String deleteEventsWithId(@PathVariable int id) {
+        return "events";
+    }
+
+
+    @PostMapping(value = "/events",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String createEvent(@PathVariable int id) {
+        return "events";
+    }
+
+    @PutMapping(value = "/events",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String updateEvent(@PathVariable int id) {
+        return "events";
+    }
+
+
 }

@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 
 import static org.junit.Assert.*;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -34,10 +34,62 @@ public class SampleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("hello"))
                 ;
-        //when
+    }
 
-        //then
+    // GET /events
+    @Test
+    public void getEvents() throws Exception {
+        //given
+        mockMvc.perform(get("/events"))
+                .andExpect(status().isOk());
+    }
 
+    // GET /events/{id}
+    @Test
+    public void getEventsWithId() throws Exception {
+        //given
+        mockMvc.perform(get("/events/2"))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/events/2"))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/events/3"))
+                .andExpect(status().isOk());
+    }
+
+    // POST /events CONTENTS-TYPE; application/json ACCEPT; application/json
+    @Test
+    public void createEvent() throws Exception {
+        //given
+        mockMvc.perform(post("/events")
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    // PUT /events CONTENTS-TYPE; application/json ACCEPT; application/json
+    @Test
+    public void updateEvent() throws Exception {
+        //given
+        mockMvc.perform(put("/events")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    // DELETE /events/{id}
+    @Test
+    public void deleteEventsWithId() throws Exception {
+        //given
+        mockMvc.perform(delete("/events/2"))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(delete("/events/2"))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(delete("/events/3"))
+                .andExpect(status().isOk());
     }
 
 }
