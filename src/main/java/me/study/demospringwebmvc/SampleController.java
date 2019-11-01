@@ -9,7 +9,7 @@ import javax.servlet.http.PushBuilder;
 /**
  * Created by dongchul on 2019-10-31.
  */
-@Controller
+//@Controller
 public class SampleController {
     /**
      * GET 요청
