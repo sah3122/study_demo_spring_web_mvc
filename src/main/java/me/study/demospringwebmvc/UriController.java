@@ -2,8 +2,10 @@ package me.study.demospringwebmvc;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Map;
 import java.util.Optional;
 
@@ -33,16 +35,24 @@ public class UriController {
     /**
      * RequestParam 의 기본값은 True 이다.
      * @RequestParam Map<String, String> params // map으로 받을 수 있다.
+     *
+     * @ModelAttribute : 복합타입의 데이터를 전달 받기 위해 사용.
+     * 옆에 BindingResult 선언시 바인딩과 관련된 에러가 담겨온다.
+     *
+     * @Valid : validation 기능
+     *
+     * validation에러도 binding result 안에 담긴다.
+     *
+     * @Valid @ModelAttribute Event event, BindingResult bindingResult 조합이 modelattribute를 사용할때 가장 많이 사용됨.
      */
     @PostMapping("/events")
     @ResponseBody
-    public Event getRequestParam(
-            @RequestParam(required = false, defaultValue = "dong") String name,
-            @RequestParam Integer limit
-
-    ) {
-        Event event = new Event();
-        event.setNaem(name);
+    public Event getRequestParam(@Valid @ModelAttribute Event event, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(c -> {
+                System.out.println(c.toString());
+            });
+        }
         return event;
     }
 
