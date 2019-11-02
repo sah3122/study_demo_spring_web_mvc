@@ -45,4 +45,15 @@ public class UriControllerTest {
         ;
     }
 
+    @Test
+    public void eventForm() throws Exception {
+        //given
+        mockMvc.perform(get("/events/form"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("/evnets/form"))
+                .andExpect(model().attributeExists("event"))
+        ;
+    }
+
 }
