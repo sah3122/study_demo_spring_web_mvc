@@ -5,14 +5,27 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * @SessionAttributes("event")
+ *
+ * ModelAttributes에 담은 객체가 sessionAttributes 에 정의한 값과 일치하면 자동으로 세션에 넣어준다.
+ * 모델 정보를 HTTP 세션에 저장해주는 애노테이션
+ *
+ * HttpSession을 직접 사용할 수도 있지만 이 애노테이션에 설정한 이름에 해당하는 모델 정보를 자동으로 세션에 넣어준다.
+ * @ModelAttribute는 세션에 있는 데이터도 바인딩한다.
+ * 열화면에서 사용해야 하는 객체를 공유할 때 사용.
+ */
 @Controller
+@SessionAttributes("event")
 public class UriController {
 
     /**
@@ -50,15 +63,22 @@ public class UriController {
      *
      * @Validated(Event.ValidateLimit.class) 그룹화 가능
      * 해당 그룹만 validation 할 수 있다.
+     *
+     * SessionStatus를 사용해서 세션 처리 완료를 알려줄 수 있다.
+     * SessionAttributes 과 같이 사용할 때 폼 처리가 끝나고 세션을 비울때 사용한다.
      * */
     @PostMapping("/events")
-    public String createParam(@Validated @ModelAttribute Event event, BindingResult bindingResult, Model model) {
+    public String createParam(@Validated @ModelAttribute Event event,
+                              BindingResult bindingResult,
+                              Model model,
+                              SessionStatus sessionStatus) {
         if(bindingResult.hasErrors()) {
             return "/events/form";
         }
 
         List<Event> eventList = new ArrayList<>();
         eventList.add(event);
+        sessionStatus.isComplete();
         //model.addAttribute("eventList", eventList);
         model.addAttribute(eventList); // 기본적으로 동일한 이름으로 매핑된다.
         return "redirect:/events/list";
@@ -78,10 +98,11 @@ public class UriController {
     }
 
     @GetMapping("/events/form")
-    public String eventsForm(Model model) {
+    public String eventsForm(Model model, HttpSession httpSession) {
         Event newEvent = new Event();
         newEvent.setLimit(50);
         model.addAttribute("event", newEvent);
+        httpSession.setAttribute("event", newEvent);
         return "events/form";
     }
 
