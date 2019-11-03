@@ -7,6 +7,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -50,14 +52,29 @@ public class UriController {
      * 해당 그룹만 validation 할 수 있다.
      * */
     @PostMapping("/events")
-    @ResponseBody
-    public Event getRequestParam(@Validated(Event.ValidateLimit.class) @ModelAttribute Event event, BindingResult bindingResult) {
+    public String createParam(@Validated @ModelAttribute Event event, BindingResult bindingResult, Model model) {
         if(bindingResult.hasErrors()) {
-            bindingResult.getAllErrors().forEach(c -> {
-                System.out.println(c.toString());
-            });
+            return "/events/form";
         }
-        return event;
+
+        List<Event> eventList = new ArrayList<>();
+        eventList.add(event);
+        //model.addAttribute("eventList", eventList);
+        model.addAttribute(eventList); // 기본적으로 동일한 이름으로 매핑된다.
+        return "redirect:/events/list";
+    }
+
+    @GetMapping("/events/list")
+    public String getEvents(Model model) {
+        Event event = new Event();
+        event.setLimit(10);
+        event.setNaem("dong");
+
+        List<Event> eventList = new ArrayList<>();
+        eventList.add(event);
+        model.addAttribute(eventList);
+
+        return "/events/list";
     }
 
     @GetMapping("/events/form")
