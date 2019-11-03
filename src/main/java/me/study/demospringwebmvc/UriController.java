@@ -102,8 +102,47 @@ public class UriController {
         Event newEvent = new Event();
         newEvent.setLimit(50);
         model.addAttribute("event", newEvent);
-        httpSession.setAttribute("event", newEvent);
+        //httpSession.setAttribute("event", newEvent);
         return "events/form";
+    }
+
+    /**
+     * 멀티 폼 서브밋
+     * Session을 사용한 방법.
+     * 마지막에 Session Status에서 비워 줄것.
+     *
+     */
+    @GetMapping("/events/form/name")
+    public String eventsFormName(Model model, HttpSession httpSession) {
+        model.addAttribute("event", new Event());
+        return "events/form/form-name";
+    }
+
+    @GetMapping("/events/form/limit")
+    public String eventsFormLimie(@ModelAttribute Event event, Model model, HttpSession httpSession) {
+        model.addAttribute("event", event);
+        return "events/form/form-limit";
+    }
+
+    @PostMapping("/events/form/name")
+    public String createParamName(@Validated @ModelAttribute Event event,
+                              BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            return "/events/form-name";
+        }
+
+        return "redirect:/events/form/limit";
+    }
+
+    @PostMapping("/events/form/limit")
+    public String createParamLimit(@Validated @ModelAttribute Event event,
+                                  BindingResult bindingResult,
+                                   SessionStatus sessionStatus) {
+        if(bindingResult.hasErrors()) {
+            return "/events/form-limit";
+        }
+        sessionStatus.setComplete();
+        return "redirect:/events/list";
     }
 
 }
