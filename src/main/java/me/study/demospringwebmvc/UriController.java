@@ -3,6 +3,7 @@ package me.study.demospringwebmvc;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -44,10 +45,13 @@ public class UriController {
      * validation에러도 binding result 안에 담긴다.
      *
      * @Valid @ModelAttribute Event event, BindingResult bindingResult 조합이 modelattribute를 사용할때 가장 많이 사용됨.
-     */
+     *
+     * @Validated(Event.ValidateLimit.class) 그룹화 가능
+     * 해당 그룹만 validation 할 수 있다.
+     * */
     @PostMapping("/events")
     @ResponseBody
-    public Event getRequestParam(@Valid @ModelAttribute Event event, BindingResult bindingResult) {
+    public Event getRequestParam(@Validated(Event.ValidateLimit.class) @ModelAttribute Event event, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             bindingResult.getAllErrors().forEach(c -> {
                 System.out.println(c.toString());
