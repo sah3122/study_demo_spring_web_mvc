@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -80,5 +81,20 @@ public class UriControllerTest {
         Object event = request.getSession().getAttribute("event");
         System.out.println(event);
     }
+
+    @Test
+    public void getEvents() throws Exception {
+        Event newEvent = new Event();
+        newEvent.setNaem("dong");
+        newEvent.setLimit(10);
+
+        mockMvc.perform(get("/events/list")
+        .sessionAttr("visitTime", LocalDateTime.now())
+        .flashAttr("newEvent", newEvent))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(xpath("//p").nodeCount(2)); // P 노드가 몇개인지 확인하는 테스트 코드
+    }
+
 
 }

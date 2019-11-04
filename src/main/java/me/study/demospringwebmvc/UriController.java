@@ -117,9 +117,12 @@ public class UriController {
         event.setLimit(10);
         event.setNaem("dong");
 
+        Event newEvent1 = (Event) model.asMap().get("newEvent"); // Flash Attributes로 넘겨준 값. Model에 바로 바인딩 된다.
+
         List<Event> eventList = new ArrayList<>();
         eventList.add(spring);
         eventList.add(newEvent);
+        eventList.add(newEvent1);
         eventList.add(event);
 
         model.addAttribute(eventList);
@@ -177,6 +180,12 @@ public class UriController {
      * spring boot 를 사용하고 있어 redirect시 model에 담아둔 primitive 값을 자동으로 넘겨주지 않게 설정되어 있다.
      * 일부 데이터만 명시적으로 보내고 싶을때 사용.
      *
+     * Flash Attributes
+     * 주로 리 다이렉트시에 데이터를 전달하기 위해 사용
+     * 데이터가 URI에 노출 되지 않음
+     * 임의의 객체를 저장할 수 있다. (Object)
+     * 보통 HTTP 세션을 사용한다.
+     * 리다리렉트 하기 전에 데이터를 세션에 저장하고 리다이렉트 요청을 처리 한 다음 그 즉시 제거됨.
      */
     @PostMapping("/events/form/limit")
     public String createParamLimit(@Validated @ModelAttribute Event event,
@@ -190,6 +199,7 @@ public class UriController {
         // spring boot 를 사용하고 있어 redirect시 model에 담아둔 값을 자동으로 넘겨주지 않게 설정되어 있다.
         redirectAttributes.addAttribute("name", event.getNaem());
         redirectAttributes.addAttribute("limit", event.getLimit());
+        redirectAttributes.addFlashAttribute("newEvent", event);
         return "redirect:/events/list";
     }
 
