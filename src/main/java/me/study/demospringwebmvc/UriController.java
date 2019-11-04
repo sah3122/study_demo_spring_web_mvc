@@ -6,6 +6,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -62,6 +63,7 @@ public class UriController {
     /**
      * RequestParam 의 기본값은 True 이다.
      * @RequestParam Map<String, String> params // map으로 받을 수 있다.
+     * form 및 queryparam 을 받을수 있다.
      *
      * @ModelAttribute : 복합타입의 데이터를 전달 받기 위해 사용.
      * 옆에 BindingResult 선언시 바인딩과 관련된 에러가 담겨온다.
@@ -101,14 +103,25 @@ public class UriController {
      *  타입 컨버전 지원
      */
     @GetMapping("/events/list")
-    public String getEvents(Model model, @SessionAttribute LocalDateTime visitTime) {
+    public String getEvents(@RequestParam String name,
+                            @RequestParam Integer limit,
+                            @ModelAttribute("newEvent") Event event, // session attribute와 동일한 네임을 사용하면 안됨다.
+                            Model model,
+                            @SessionAttribute LocalDateTime visitTime) {
         System.out.println(visitTime);
-        Event event = new Event();
+        Event newEvent = new Event();
+        newEvent.setNaem(name);
+        newEvent.setLimit(limit);
+
+        Event spring = new Event();
         event.setLimit(10);
         event.setNaem("dong");
 
         List<Event> eventList = new ArrayList<>();
+        eventList.add(spring);
+        eventList.add(newEvent);
         eventList.add(event);
+
         model.addAttribute(eventList);
 
         return "/events/list";
@@ -151,14 +164,32 @@ public class UriController {
         return "redirect:/events/form/limit";
     }
 
+    /**
+     * RedirectAttributes
+     * 리다이렉트 시 기본적으로 Model에 들어있는 primitive type 데이터는 URI 쿼리 매개변수에 추가된다.
+     * 스프링 부트에선 해당 기능이 기본적으로 비활성화
+     * ignore-default-model-on-redirect 프로퍼티를 사용해서 활성화 가능
+     *
+     * 원하는 값만 리다이렉트 할 때 전달하고 싶다면 RedirctAttributes에 명시적으로 추가 가능하다.
+     *
+     * 리다이렉트 요청을 처리하는 곳에서 쿼리 매개변수를 @RequestParam 또는 @ModelAttribute로 받을 수 있다.
+     *
+     * spring boot 를 사용하고 있어 redirect시 model에 담아둔 primitive 값을 자동으로 넘겨주지 않게 설정되어 있다.
+     * 일부 데이터만 명시적으로 보내고 싶을때 사용.
+     *
+     */
     @PostMapping("/events/form/limit")
     public String createParamLimit(@Validated @ModelAttribute Event event,
-                                  BindingResult bindingResult,
-                                   SessionStatus sessionStatus) {
+                                   BindingResult bindingResult,
+                                   SessionStatus sessionStatus,
+                                   RedirectAttributes redirectAttributes) {
         if(bindingResult.hasErrors()) {
             return "/events/form-limit";
         }
         sessionStatus.setComplete();
+        // spring boot 를 사용하고 있어 redirect시 model에 담아둔 값을 자동으로 넘겨주지 않게 설정되어 있다.
+        redirectAttributes.addAttribute("name", event.getNaem());
+        redirectAttributes.addAttribute("limit", event.getLimit());
         return "redirect:/events/list";
     }
 
