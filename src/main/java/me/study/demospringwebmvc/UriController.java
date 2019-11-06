@@ -41,6 +41,24 @@ import java.util.Optional;
 public class UriController {
 
     /**
+     * @ModelAttribute 사용법
+     *
+     * @RequestMapping 을 사용한 핸들러 메소드의 아규먼트에 사용하기
+     * @Controller 또는 @ControllerAdvice를 사용한 클래스에서 모델 정보를 초기화 할 때 사용한다,
+     * @RequestMapping과 같이 사용하면 해당 메소드에서 리턴하는 객체를 모델에 넣어준다.
+     *    RequestToViewNameTranslator
+     */
+    @ModelAttribute
+    public void categories(Model model) {
+        model.addAttribute("categories", List.of("study", "seminar", "hobby", "social"));
+    }
+
+//    @ModelAttribute("categories")
+//    public List<String> categories(Model model) {
+//        return List.of("study", "seminar", "hobby", "social");
+//    }
+
+    /**
      * URI Pattern
      * spring 에서 PathVariable에 정의한 값을 자동으로 캐스팅하여 매칭 해준다.
      * Optional 지원 가능 , Required False 와 같음.
@@ -158,6 +176,7 @@ public class UriController {
     }
 
     @PostMapping("/events/form/name")
+    @ModelAttribute
     public String createParamName(@Validated @ModelAttribute Event event,
                               BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
@@ -165,6 +184,12 @@ public class UriController {
         }
 
         return "redirect:/events/form/limit";
+    }
+
+    @PostMapping("/events/form/name")
+    @ModelAttribute // 모델에 담아준다.
+    public Event returnModelAttributes() {
+        return new Event();
     }
 
     /**
