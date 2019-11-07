@@ -1,9 +1,11 @@
 package me.study.demospringwebmvc;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -39,6 +41,23 @@ import java.util.Optional;
 @Controller
 @SessionAttributes("event")
 public class UriController {
+
+    @Autowired
+    EventValidator eventValidator;
+
+    /**
+     * DataBinder : @InitBinder
+     * 특정 컨트롤러에서 바인딩 또는 검증 설정을 변경하고 싶을 때 사용
+     *
+     */
+    @InitBinder
+    //@InitBinder("event") 특정 모델 객체에만 바인딩 또는 Validator 설정을 하고 싶은 경우
+    public void initEventBinder(WebDataBinder webDataBinder) {
+        webDataBinder.setDisallowedFields("id"); // id값을 바인딩하지 않도록 설정
+        //webDataBinder.addCustomFormatter(); 포메터 설정
+        webDataBinder.addValidators(new EventValidator()); //Validator 설정
+    }
+
 
     /**
      * @ModelAttribute 사용법
